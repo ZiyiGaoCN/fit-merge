@@ -144,26 +144,24 @@ HTML_TEMPLATE = r"""
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             min-height: 100vh;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             color: #e0e0e0;
-            padding: 20px;
+            padding: 30px 20px;
         }
 
-        .container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 40px;
-            width: 90%;
-            max-width: 650px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        .page-wrapper {
+            width: 95%;
+            max-width: 1200px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 24px;
         }
 
         h1 {
-            text-align: center;
-            font-size: 28px;
+            font-size: 32px;
             margin-bottom: 8px;
             background: linear-gradient(90deg, #ff6b6b, #ffa502);
             -webkit-background-clip: text;
@@ -171,20 +169,78 @@ HTML_TEMPLATE = r"""
         }
 
         .subtitle {
-            text-align: center;
             color: #888;
             font-size: 14px;
-            margin-bottom: 30px;
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .left-panel {
+            flex: 1;
+            min-width: 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .right-panel {
+            flex: 1;
+            min-width: 0;
+            display: none;
+        }
+
+        .right-panel.show { display: block; }
+
+        .track-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .track-card + .track-card {
+            margin-top: 16px;
+        }
+
+        .track-card img { width: 100%; display: block; }
+
+        .track-card-label {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .track-card-label.success {
+            color: #2ed573;
+            background: rgba(46, 213, 115, 0.05);
+        }
+
+        .track-card .track-loading {
+            padding: 40px;
+            text-align: center;
+            color: #888;
+            font-size: 13px;
         }
 
         .upload-zone {
             border: 2px dashed rgba(255, 255, 255, 0.2);
             border-radius: 12px;
-            padding: 30px;
+            padding: 24px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             position: relative;
         }
 
@@ -198,14 +254,14 @@ HTML_TEMPLATE = r"""
             background: rgba(46, 213, 115, 0.05);
         }
 
-        .upload-zone .icon { font-size: 36px; margin-bottom: 10px; }
-        .upload-zone .label { font-size: 16px; font-weight: 500; }
-        .upload-zone .hint { font-size: 12px; color: #888; margin-top: 6px; }
+        .upload-zone .icon { font-size: 32px; margin-bottom: 8px; }
+        .upload-zone .label { font-size: 15px; font-weight: 500; }
+        .upload-zone .hint { font-size: 12px; color: #888; margin-top: 4px; }
 
         .upload-zone .filename {
-            font-size: 14px;
+            font-size: 13px;
             color: #2ed573;
-            margin-top: 8px;
+            margin-top: 6px;
             font-weight: 500;
         }
 
@@ -216,46 +272,18 @@ HTML_TEMPLATE = r"""
             cursor: pointer;
         }
 
-        .track-preview {
-            margin-top: 16px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: #16213e;
-            display: none;
-        }
-
-        .track-preview.show { display: block; }
-
-        .track-preview img { width: 100%; display: block; }
-
-        .track-preview .track-label {
-            text-align: center;
-            font-size: 12px;
-            color: #888;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .track-preview .track-loading {
-            padding: 30px;
-            text-align: center;
-            color: #888;
-            font-size: 13px;
-        }
-
         .btn-merge {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             border: none;
             border-radius: 12px;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
             background: linear-gradient(135deg, #ff6b6b, #ffa502);
             color: white;
             transition: all 0.3s ease;
-            margin-top: 20px;
+            margin-top: 16px;
             letter-spacing: 1px;
         }
 
@@ -270,32 +298,9 @@ HTML_TEMPLATE = r"""
             transform: none;
         }
 
-        .result-section {
-            margin-top: 24px;
-            display: none;
-        }
-
-        .result-section.show { display: block; }
-
-        .result-track {
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(46, 213, 115, 0.3);
-        }
-
-        .result-track img { width: 100%; display: block; }
-
-        .result-label {
-            text-align: center;
-            font-size: 13px;
-            color: #2ed573;
-            padding: 8px;
-            background: rgba(46, 213, 115, 0.05);
-        }
-
         .status {
-            margin-top: 20px;
-            padding: 16px;
+            margin-top: 16px;
+            padding: 14px;
             border-radius: 10px;
             font-size: 14px;
             display: none;
@@ -348,60 +353,71 @@ HTML_TEMPLATE = r"""
 
         .footer {
             text-align: center;
-            margin-top: 24px;
+            margin-top: 20px;
             font-size: 12px;
             color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .main-layout { flex-direction: column; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🚴 FIT 文件合并工具</h1>
-        <p class="subtitle">上传两个 Garmin FIT 文件，合并为一个活动文件</p>
-
-        <form id="mergeForm" enctype="multipart/form-data">
-            <div class="upload-zone" id="zone1">
-                <div class="icon">📄</div>
-                <div class="label">第一个 FIT 文件</div>
-                <div class="hint">点击选择或拖拽文件到此处</div>
-                <div class="filename" id="name1"></div>
-                <input type="file" name="file1" id="file1" accept=".fit">
-            </div>
-
-            <div class="upload-zone" id="zone2">
-                <div class="icon">📄</div>
-                <div class="label">第二个 FIT 文件</div>
-                <div class="hint">点击选择或拖拽文件到此处</div>
-                <div class="filename" id="name2"></div>
-                <input type="file" name="file2" id="file2" accept=".fit">
-            </div>
-
-            <!-- Combined preview of both tracks -->
-            <div class="track-preview" id="previewSection">
-                <div class="track-loading" id="previewLoading">
-                    <span class="spinner"></span>正在生成轨迹预览...
-                </div>
-                <img id="previewImg" src="" alt="轨迹预览" style="display:none;">
-                <div class="track-label" id="previewLabel"></div>
-            </div>
-
-            <button type="submit" class="btn-merge" id="btnMerge" disabled>
-                合并文件
-            </button>
-        </form>
-
-        <div class="status" id="status"></div>
-
-        <!-- Merged result track -->
-        <div class="result-section" id="resultSection">
-            <div class="result-track">
-                <img id="resultTrack" src="" alt="合并后轨迹">
-                <div class="result-label">✅ 合并后轨迹 · <span class="color-dot" style="background:#ffa502"></span>合并结果</div>
-            </div>
+    <div class="page-wrapper">
+        <div class="page-header">
+            <h1>🚴 FIT 文件合并工具</h1>
+            <p class="subtitle">上传两个 Garmin FIT 文件，合并为一个活动文件</p>
         </div>
 
-        <div class="footer">
-            Powered by Garmin FIT SDK · 支持所有 Garmin 设备的 FIT 文件
+        <div class="main-layout">
+            <!-- Left: upload + controls -->
+            <div class="left-panel">
+                <form id="mergeForm" enctype="multipart/form-data">
+                    <div class="upload-zone" id="zone1">
+                        <div class="icon">📄</div>
+                        <div class="label">第一个 FIT 文件</div>
+                        <div class="hint">点击选择或拖拽文件到此处</div>
+                        <div class="filename" id="name1"></div>
+                        <input type="file" name="file1" id="file1" accept=".fit">
+                    </div>
+
+                    <div class="upload-zone" id="zone2">
+                        <div class="icon">📄</div>
+                        <div class="label">第二个 FIT 文件</div>
+                        <div class="hint">点击选择或拖拽文件到此处</div>
+                        <div class="filename" id="name2"></div>
+                        <input type="file" name="file2" id="file2" accept=".fit">
+                    </div>
+
+                    <button type="submit" class="btn-merge" id="btnMerge" disabled>
+                        合并文件
+                    </button>
+                </form>
+
+                <div class="status" id="status"></div>
+                <div class="footer">
+                    Powered by Garmin FIT SDK
+                </div>
+            </div>
+
+            <!-- Right: track previews -->
+            <div class="right-panel" id="rightPanel">
+                <!-- Pre-merge preview -->
+                <div class="track-card" id="previewCard" style="display:none;">
+                    <div class="track-loading" id="previewLoading">
+                        <span class="spinner"></span>正在生成轨迹预览...
+                    </div>
+                    <img id="previewImg" src="" alt="轨迹预览" style="display:none;">
+                    <div class="track-card-label" id="previewLabel"></div>
+                </div>
+
+                <!-- Post-merge result -->
+                <div class="track-card" id="resultCard" style="display:none;">
+                    <img id="resultTrack" src="" alt="合并后轨迹">
+                    <div class="track-card-label success">✅ 合并后轨迹 · <span class="color-dot" style="background:#ffa502"></span>合并结果</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -415,22 +431,28 @@ HTML_TEMPLATE = r"""
         const btn = document.getElementById('btnMerge');
         const status = document.getElementById('status');
         const form = document.getElementById('mergeForm');
-        const previewSection = document.getElementById('previewSection');
+        const rightPanel = document.getElementById('rightPanel');
+        const previewCard = document.getElementById('previewCard');
         const previewLoading = document.getElementById('previewLoading');
         const previewImg = document.getElementById('previewImg');
         const previewLabel = document.getElementById('previewLabel');
-        const resultSection = document.getElementById('resultSection');
+        const resultCard = document.getElementById('resultCard');
         const resultTrack = document.getElementById('resultTrack');
 
         function updateBtn() {
             btn.disabled = !(file1.files.length && file2.files.length);
         }
 
+        function showRightPanel() {
+            rightPanel.classList.add('show');
+        }
+
         function tryPreviewBoth() {
             // Only preview when both files are uploaded
             if (!file1.files.length || !file2.files.length) return;
 
-            previewSection.classList.add('show');
+            showRightPanel();
+            previewCard.style.display = 'block';
             previewLoading.style.display = 'block';
             previewImg.style.display = 'none';
             previewLabel.textContent = '';
@@ -471,7 +493,7 @@ HTML_TEMPLATE = r"""
             }
 
             if (!hasFile1 && !hasFile2) {
-                previewSection.classList.remove('show');
+                previewCard.style.display = 'none';
                 return;
             }
 
@@ -479,7 +501,8 @@ HTML_TEMPLATE = r"""
             const which = hasFile1 ? '文件 1' : '文件 2';
             const color = hasFile1 ? '#ff6b6b' : '#4ecdc4';
 
-            previewSection.classList.add('show');
+            showRightPanel();
+            previewCard.style.display = 'block';
             previewLoading.style.display = 'block';
             previewImg.style.display = 'none';
             previewLabel.textContent = '';
@@ -539,7 +562,7 @@ HTML_TEMPLATE = r"""
             btn.textContent = '合并中...';
             status.className = 'status loading';
             status.innerHTML = '<span class="spinner"></span>正在合并 FIT 文件，请稍候...';
-            resultSection.classList.remove('show');
+            resultCard.style.display = 'none';
 
             const formData = new FormData();
             formData.append('file1', file1.files[0]);
@@ -568,10 +591,11 @@ HTML_TEMPLATE = r"""
                     status.className = 'status success';
                     status.textContent = '✅ 合并成功！文件已开始下载（' + (data.size || '?') + ' bytes）';
 
-                    // Show merged track
+                    // Show merged track on the right
                     if (data.track_image) {
                         resultTrack.src = 'data:image/png;base64,' + data.track_image;
-                        resultSection.classList.add('show');
+                        resultCard.style.display = 'block';
+                        showRightPanel();
                     }
                 } else {
                     status.className = 'status error';
