@@ -1,73 +1,86 @@
 # FIT File Merge Project
 
-这个项目用于合并多个FIT文件，并提供FIT与CSV格式之间的转换工具。
+这个项目用于合并多个 Garmin FIT 文件，并提供 FIT 与 CSV 格式之间的转换工具。
 
-## 文件夹结构
+## 🌐 Web 界面（新增）
 
-### 📁 **FitSDK/**
-官方Garmin FIT SDK解压文件
-- `java/` - Java工具，包含官方FitCSVTool.jar
-- `c/`, `cpp/`, `cs/`, `py/`, `swift/` - 各种编程语言的SDK
-- `examples/` - 示例文件
-- `config.csv`, `Profile.xlsx` - 配置和协议文件
+提供基于 Flask 的 Web 前端，支持拖拽上传两个 FIT 文件并合并下载。
 
-### 📁 **original_files/**
-原始和最终的FIT文件
-- `ride-0-2025-07-19-09-41-59.fit` - 第一个骑行文件
-- `ride-0-2025-07-19-14-53-44.fit` - 第二个骑行文件
-- `gpxt_result.fit` - 参考文件
-- `final_merged.fit` - 最终合并结果
+### 快速启动
 
-### 📁 **converted_files/**
-转换生成的CSV文件
-- `*.csv` - 各种FIT到CSV转换的结果
-
-### 📁 **tools/**
-自定义开发的工具脚本
-- `csv_merger.py` - CSV合并工具
-- `fit_to_csv_converter.py` - FIT到CSV转换器
-- `complete_csv_to_fit.py` - 完整的CSV到FIT转换器
-- `merge_official_csv.py` - 官方CSV格式合并工具
-- `fix_csv_format.py` - CSV格式修复工具
-- `binary_analyzer.py` - 二进制结构分析工具
-
-### 📁 **temp_files/**
-临时文件和压缩包
-- `*.zip` - 下载的压缩包
-- `*.txt` - 临时文本文件
-
-### 📁 **fit_env/**
-Python虚拟环境
-- 包含fitparse, pandas等依赖
-
-## 使用方法
-
-### 1. 使用官方工具转换FIT到CSV
 ```bash
-java -jar FitSDK/java/FitCSVTool.jar -b input.fit output.csv
+# 安装依赖
+pip install -r requirements.txt
+
+# 启动 Web 服务
+python web_app.py
 ```
 
-### 2. 转换CSV回FIT格式
+然后打开浏览器访问 **http://localhost:5000**
+
+### 功能特点
+
+- 🎨 现代化深色 UI
+- 📁 支持拖拽上传
+- ⚡ 一键合并下载
+- 🔍 自动检测 Java 和 FitCSVTool 环境
+
+### 前置要求
+
+- **Python 3.8+**
+- **Java Runtime** (用于 FitCSVTool.jar)
+- FitSDK 已包含在项目中
+
+## 命令行使用
+
+### 合并两个 FIT 文件
+
 ```bash
+python entrypoint.py ride1.fit ride2.fit -o merged.fit
+```
+
+### FIT 与 CSV 转换
+
+```bash
+# FIT 转 CSV
+java -jar FitSDK/java/FitCSVTool.jar -b input.fit output.csv
+
+# CSV 转 FIT
 java -jar FitSDK/java/FitCSVTool.jar -c input.csv output.fit
 ```
 
-### 3. 合并两个FIT文件
-1. 将FIT文件转换为CSV
-2. 使用merge_official_csv.py合并CSV
-3. 修复格式后转换回FIT
+## 文件夹结构
 
-## 最终结果
+| 目录 | 说明 |
+|------|------|
+| `FitSDK/` | 官方 Garmin FIT SDK（含 FitCSVTool.jar） |
+| `tools/` | 自定义工具脚本（CSV 合并、转换、修复） |
+| `original_files/` | 原始和合并后的 FIT 文件 |
+| `converted_files/` | CSV 转换结果 |
 
-最成功的合并结果在 `original_files/final_merged.fit`：
-- 2,919条记录
-- 包含所有必要的消息类型
-- 107,198字节
-- 时间范围：2025-07-19 01:41:58 到 07:18:47
+## 核心文件
+
+- **`entrypoint.py`** — 主合并逻辑（CLI 入口）
+- **`web_app.py`** — Web 前端（Flask）
+- **`tools/csv_merger.py`** — CSV 合并工具
+- **`tools/fit_to_csv_converter.py`** — FIT→CSV 转换器
+- **`tools/merge_official_csv.py`** — 官方 CSV 格式合并
+
+## 合并流程
+
+1. FIT → CSV（使用官方 FitCSVTool.jar）
+2. 合并两个 CSV（按消息类型优先级 + 时间戳排序，record 去重）
+3. 修复 CSV 格式（处理 pandas 输出的兼容性问题）
+4. CSV → FIT（使用官方 FitCSVTool.jar）
 
 ## 工具特色
 
-1. **官方兼容性** - 使用Garmin官方FIT SDK确保100%兼容
-2. **完整数据保留** - 保留所有消息类型和元数据
-3. **智能合并** - 自动排序和去重
-4. **格式修复** - 自动处理pandas格式问题
+1. **官方兼容性** — 使用 Garmin 官方 FIT SDK 确保 100% 兼容
+2. **完整数据保留** — 保留所有消息类型和元数据
+3. **智能合并** — 自动排序和去重
+4. **格式修复** — 自动处理 pandas 格式问题
+5. **Web 界面** — 无需命令行，浏览器操作即可
+
+## License
+
+MIT
