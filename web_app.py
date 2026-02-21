@@ -47,6 +47,20 @@ def extract_gps_from_fit(fit_path):
     return lats, lons
 
 
+def _get_cn_font():
+    """获取中文字体"""
+    from matplotlib import font_manager
+    font_paths = [
+        '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
+        '/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc',
+        '/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc',
+    ]
+    for p in font_paths:
+        if os.path.exists(p):
+            return font_manager.FontProperties(fname=p)
+    return None
+
+
 def generate_track_image(tracks, labels=None, colors=None, title=None):
     """
     生成轨迹预览图，返回 base64 PNG。
@@ -58,6 +72,8 @@ def generate_track_image(tracks, labels=None, colors=None, title=None):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
+
+    cn_font = _get_cn_font()
 
     if colors is None:
         colors = ['#ff6b6b', '#4ecdc4', '#ffa502', '#a55eea']
@@ -83,7 +99,8 @@ def generate_track_image(tracks, labels=None, colors=None, title=None):
 
     if not has_data:
         ax.text(0.5, 0.5, '无 GPS 数据', transform=ax.transAxes,
-                ha='center', va='center', color='#888', fontsize=14)
+                ha='center', va='center', color='#888', fontsize=14,
+                fontproperties=cn_font)
 
     ax.set_aspect('equal')
     ax.tick_params(colors='#666', labelsize=7)
@@ -92,12 +109,16 @@ def generate_track_image(tracks, labels=None, colors=None, title=None):
     ax.grid(True, alpha=0.12, color='#555')
 
     if has_data and len(tracks) > 0:
-        legend = ax.legend(fontsize=9, loc='upper left',
-                           facecolor='#1a1a2e', edgecolor='#444',
-                           labelcolor='#ddd', framealpha=0.9)
+        legend_kwargs = dict(fontsize=9, loc='upper left',
+                             facecolor='#1a1a2e', edgecolor='#444',
+                             labelcolor='#ddd', framealpha=0.9)
+        if cn_font:
+            legend_kwargs['prop'] = cn_font
+        ax.legend(**legend_kwargs)
 
     if title:
-        ax.set_title(title, color='#ccc', fontsize=11, pad=10)
+        ax.set_title(title, color='#ccc', fontsize=11, pad=10,
+                     fontproperties=cn_font)
 
     plt.tight_layout()
 
