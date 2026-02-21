@@ -1,0 +1,10 @@
+venv/
+fit_env/
+__pycache__/
+*.pyc
+.DS_Store
+.claude/
+original_files/*.fit
+temp_files/
+converted_files/
+*.fit
